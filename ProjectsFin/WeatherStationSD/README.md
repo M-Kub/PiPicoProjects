@@ -1,1 +1,1 @@
-![WeatherStation](/images/picoWeatherStationSD-Overview.jpg)
+![WeatherStation](images/picoWeatherStationSD-Overview.jpg)

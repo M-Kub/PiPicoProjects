@@ -5,3 +5,6 @@
 
 ### ReactionGame two player time meassuring breadboard setup
 ![reactionGame](images/reactionGame.jpg)
+
+### Potentiometer dimming LED breadboard setup
+![potentiometerLED](images/potentiometerLED.jpg)

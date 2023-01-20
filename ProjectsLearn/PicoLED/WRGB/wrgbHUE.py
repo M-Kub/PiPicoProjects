@@ -1,8 +1,8 @@
 import time
-from neopixel import Neopixel
+from libs.neopixel import Neopixel
 
 numpix = 8
-strip = Neopixel(numpix, 0, 0, "RGBW")
+strip = Neopixel(numpix, 0, 15, "RGBW")
 
 strip.brightness(80)
 while True:

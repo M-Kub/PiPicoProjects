@@ -4,11 +4,17 @@ import network
 import rp2
 import utime
 from libs import stuff
+from libs.neopixel import Neopixel
 
 
-# PiPico Setup
-led = machine.Pin("LED", machine.Pin.OUT)
-
+# Pico Setup
+numpix = 8
+strip = Neopixel(numpix, 0, 15, "RGBW")
+piLED = machine.Pin('LED', machine.Pin.OUT)
+strip.brightness(80)
+ledOn = (0, 0, 0, 255)
+ledOff = (0, 0, 0, 0)
+strip_state = 0
 # WiFi setup
 wifiSSID = stuff.wifiSSID
 wifiPW = stuff.wifiPW
@@ -32,11 +38,13 @@ def wifiConnect():
             utime.sleep(0.5)
     if wifi.isconnected():
         print("Connection established, congratulations!")
+        piLED.value(1)
         netConfig = wifi.ifconfig()
         print(f"Your IP address is: {netConfig[0]}\n")
         return netConfig[0]
     else:
         print(f"No WIFI connection. WIFI status is {wifi.status()}.\n")
+        piLED.value(0)
         return ""
 
 
@@ -63,18 +71,20 @@ while True:
         print(f"URL: {request[1]}")
         if request[1] == "/light/on":
             print("Turning on LED!")
-            led.value(1)
+            strip_state = 1
+            strip.fill(ledOn)
+            strip.show()  
         elif request[1] == "/light/off":
             print('Turning off LED')
-            led.value(0)
-        elif request[1] == "/light/toggle":
-            print("Toggle LED")
-            led.toggle()
+            strip_state = 0
+            strip.fill(ledOff)
+            strip.show()  
+            
         # Evaluate LED status
         state_is = ""
-        if led.value() == 1:
+        if strip_state == 1:
             state_is += "<p align='center'><b>LED is ON</b> <a href='/light/off'><button>OFF</button></a></p>"
-        if led.value() == 0:
+        if strip_state == 0:
             state_is += '<p align="center"><b>LED is OFF</b> <a href="/light/on"><button>ON</button></a></p>'
         # Create the HTTP-Response
         response = html.replace("TEXT", state_is)
@@ -92,10 +102,5 @@ try: conn.close()
 except NameError: pass
 try: server.close()
 except NameError: pass
+piLED.value(0)
 print("Server shut down")
-            
-        
-            
-        
-        
-

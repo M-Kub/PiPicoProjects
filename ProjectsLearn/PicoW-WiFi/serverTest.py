@@ -8,21 +8,25 @@ from libs.neopixel import Neopixel
 
 
 # Pico Setup
+piLED = machine.Pin('LED', machine.Pin.OUT)
+
+# Neopixel setup
 numpix = 8
 strip = Neopixel(numpix, 0, 15, "RGBW")
-piLED = machine.Pin('LED', machine.Pin.OUT)
 strip.brightness(80)
 ledOn = (0, 0, 0, 255)
 ledOff = (0, 0, 0, 0)
 strip_state = 0
+
 # WiFi setup
 wifiSSID = stuff.wifiSSID
 wifiPW = stuff.wifiPW
 rp2.country('DE')
 
-html = """<!doctype html><html lang="en"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="shortcut icon" href="data:"> \
-<title>PicoW ServerTest</title> </head> \
-<body><h1 align="center">HiHo, what is going on?</h1><hr>TEXT<hr><p align="center">What's up everybody?</p></body></html>"""
+# Setup for the Webpage
+page = open("libs/index.html", "r")
+html = page.read()
+page.close()
 
 
 def wifiConnect():
@@ -85,9 +89,9 @@ while True:
         if strip_state == 1:
             state_is += "<p align='center'><b>LED is ON</b> <a href='/light/off'><button>OFF</button></a></p>"
         if strip_state == 0:
-            state_is += '<p align="center"><b>LED is OFF</b> <a href="/light/on"><button>ON</button></a></p>'
+            state_is += "<p align='center'><b>LED is OFF</b> <a href='/light/on'><button>ON</button></a></p>"
         # Create the HTTP-Response
-        response = html.replace("TEXT", state_is)
+        response = html
         conn.send("HTTP/1.0 200 OK\r\nContent-type: text/html\r\n\r\n")
         conn.send(response)
         conn.close()

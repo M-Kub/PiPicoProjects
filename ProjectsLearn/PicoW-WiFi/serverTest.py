@@ -15,8 +15,8 @@ numpix = 8
 strip = Neopixel(numpix, 0, 15, "RGBW")
 strip.brightness(80)
 ledOn = (0, 0, 0, 255)
+ledBunt = (55, 0, 200, 55)
 ledOff = (0, 0, 0, 0)
-strip_state = 0
 
 # WiFi setup
 wifiSSID = stuff.wifiSSID
@@ -72,31 +72,27 @@ while True:
         request = conn.recv(1024)
         request = str(request)
         request = request.split()
-        print(f"URL: {request[1]}")
+        print((f"{request}"))
+        print(f"URL: {request}")
         if request[1] == "/light/on":
             print("Turning on LED!")
-            strip_state = 1
             strip.fill(ledOn)
             strip.show()  
         elif request[1] == "/light/off":
             print('Turning off LED')
-            strip_state = 0
             strip.fill(ledOff)
-            strip.show()  
-            
-        # Evaluate LED status
-        state_is = ""
-        if strip_state == 1:
-            state_is += "<p align='center'><b>LED is ON</b> <a href='/light/off'><button>OFF</button></a></p>"
-        if strip_state == 0:
-            state_is += "<p align='center'><b>LED is OFF</b> <a href='/light/on'><button>ON</button></a></p>"
+            strip.show()
+        elif request[1] == "/light/bunt":
+            print('Mach Bunt')
+            strip.fill(ledBunt)
+            strip.show()
+
         # Create the HTTP-Response
         response = html
         conn.send("HTTP/1.0 200 OK\r\nContent-type: text/html\r\n\r\n")
         conn.send(response)
         conn.close()
         print("HTTP-Response was send\n")
-        print()
     except OSError as e:
         break
     except (KeyboardInterrupt):

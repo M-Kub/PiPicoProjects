@@ -60,6 +60,7 @@ if ipv4 != "":
     print("Starting the server")
     addr = socket.getaddrinfo(ipv4, 80)[0][-1]
     server = socket.socket()
+    server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     server.bind(addr)
     server.listen(1)
     print(f"Server is listening on {addr}")
